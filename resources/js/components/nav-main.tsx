@@ -35,7 +35,10 @@ export function NavMain({ items }: { items: NavItem[] }) {
                             </Link>
                         </SidebarMenuButton>
                         {item.badge && (
-                            <SidebarMenuBadge aria-hidden="true">
+                            <SidebarMenuBadge
+                                aria-hidden="true"
+                                className="rounded-full bg-primary text-primary-foreground peer-hover/menu-button:text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground"
+                            >
                                 {item.badge.value.toLocaleString()}
                             </SidebarMenuBadge>
                         )}
