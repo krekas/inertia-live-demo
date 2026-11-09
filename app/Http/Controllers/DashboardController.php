@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -20,7 +21,7 @@ class DashboardController extends Controller
     public function __invoke(): Response
     {
         return Inertia::render('dashboard', [
-            'ordersOverview' => fn (): array => $this->ordersOverview(),
+            'ordersOverview' => Inertia::live(fn (): array => $this->ordersOverview(), OrderCreated::class),
             'newUsers' => fn (): int => User::query()
                 ->where('created_at', '>=', now('UTC')->subDay())
                 ->count(),

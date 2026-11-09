@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, useProp } from '@inertiajs/react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
     Card,
@@ -27,6 +27,7 @@ import {
     formatMoney,
     formatOrderNumber,
 } from '@/lib/format';
+import { Spinner } from '@/components/ui/spinner';
 import { dashboard } from '@/routes';
 import type { OrdersOverview } from '@/types';
 
@@ -47,6 +48,7 @@ export default function Dashboard({
     newUsers,
 }: DashboardProps) {
     const { timezone, currency } = ordersOverview;
+    const isRefreshingOrders = useProp('ordersOverview').loading;
 
     const chartData = ordersOverview.hourly.map((bucket) => ({
         ...bucket,
@@ -58,9 +60,23 @@ export default function Dashboard({
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h1 className="text-xl font-semibold tracking-tight">
-                        Orders
-                    </h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-xl font-semibold tracking-tight">
+                            Orders
+                        </h1>
+                        <p
+                            role="status"
+                            aria-live="polite"
+                            className="flex items-center gap-1.5 text-sm text-muted-foreground"
+                        >
+                            {isRefreshingOrders && (
+                                <>
+                                    <Spinner className="size-3.5" aria-hidden="true" />
+                                    Updating orders…
+                                </>
+                            )}
+                        </p>
+                    </div>
                     <p className="text-sm text-muted-foreground">
                         Last 24 hours ({timezone})
                     </p>
