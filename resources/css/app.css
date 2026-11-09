@@ -8,6 +8,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    --animate-new-order: new-order 600ms ease-out;
+
+    @keyframes new-order {
+        from {
+            background-color: color-mix(
+                in oklab,
+                var(--chart-1) 25%,
+                transparent
+            );
+        }
+        to {
+            background-color: transparent;
+        }
+    }
+
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',

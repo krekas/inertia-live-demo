@@ -1,4 +1,5 @@
 import { Head, useProp } from '@inertiajs/react';
+import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
     Card,
@@ -49,6 +50,12 @@ export default function Dashboard({
 }: DashboardProps) {
     const { timezone, currency } = ordersOverview;
     const isRefreshingOrders = useProp('ordersOverview').loading;
+
+    // Orders newer than anything on the first render arrived live, so they get
+    // a brief highlight. Rows are keyed by id, so the animation runs once on mount.
+    const [newestIdOnLoad] = useState(() =>
+        Math.max(0, ...ordersOverview.latestOrders.map((order) => order.id)),
+    );
 
     const chartData = ordersOverview.hourly.map((bucket) => ({
         ...bucket,
@@ -184,7 +191,14 @@ export default function Dashboard({
                                     </TableRow>
                                 ) : (
                                     ordersOverview.latestOrders.map((order) => (
-                                        <TableRow key={order.id}>
+                                        <TableRow
+                                            key={order.id}
+                                            className={
+                                                order.id > newestIdOnLoad
+                                                    ? 'animate-new-order'
+                                                    : undefined
+                                            }
+                                        >
                                             <TableCell className="font-medium tabular-nums">
                                                 {formatOrderNumber(order.id)}
                                             </TableCell>
