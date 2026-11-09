@@ -71,7 +71,10 @@ export default function Dashboard({
                         >
                             {isRefreshingOrders && (
                                 <>
-                                    <Spinner className="size-3.5" aria-hidden="true" />
+                                    <Spinner
+                                        className="size-3.5"
+                                        aria-hidden="true"
+                                    />
                                     Updating orders…
                                 </>
                             )}

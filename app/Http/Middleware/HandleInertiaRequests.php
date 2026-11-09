@@ -2,7 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Events\OrderCreated;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\LiveProp;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -42,6 +46,26 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'ordersTodayCount' => $this->ordersTodayCount($request),
         ];
+    }
+
+    /**
+     * Count today's orders (UTC calendar day) for users who can access the dashboard.
+     */
+    protected function ordersTodayCount(Request $request): ?LiveProp
+    {
+        if (! $request->user()?->hasVerifiedEmail()) {
+            return null;
+        }
+
+        return Inertia::live(function (): int {
+            $startOfToday = now('UTC')->startOfDay();
+
+            return Order::query()
+                ->where('created_at', '>=', $startOfToday)
+                ->where('created_at', '<', $startOfToday->addDay())
+                ->count();
+        }, OrderCreated::class);
     }
 }

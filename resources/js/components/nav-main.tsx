@@ -3,6 +3,7 @@ import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
+    SidebarMenuBadge,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
@@ -26,8 +27,18 @@ export function NavMain({ items }: { items: NavItem[] }) {
                             <Link href={item.href} prefetch>
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
+                                {item.badge && (
+                                    <span className="sr-only">
+                                        , {item.badge.label}
+                                    </span>
+                                )}
                             </Link>
                         </SidebarMenuButton>
+                        {item.badge && (
+                            <SidebarMenuBadge aria-hidden="true">
+                                {item.badge.value.toLocaleString()}
+                            </SidebarMenuBadge>
+                        )}
                     </SidebarMenuItem>
                 ))}
             </SidebarMenu>
