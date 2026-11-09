@@ -9,5 +9,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel(OrderCreated::CHANNEL, function (User $user): bool {
-    return $user->hasVerifiedEmail();
+    return $user->can('view-dashboard');
 });

@@ -55,7 +55,7 @@ class HandleInertiaRequests extends Middleware
      */
     protected function ordersTodayCount(Request $request): ?LiveProp
     {
-        if (! $request->user()?->hasVerifiedEmail()) {
+        if (! $request->user()?->can('view-dashboard')) {
             return null;
         }
 
